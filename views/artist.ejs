@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>
+    <%= artist.name %>
+  </title>
+</head>
+
+<body>
+  <h1>
+    <%= artist.name %>
+  </h1>
+
+  <p>
+    <%= artist.bio.summary %>
+  </p>
+
+  <h2>Top Albums</h2>
+  <ul>
+    <% topAlbums.forEach(album=> { %>
+      <li>
+        <strong>
+          <a href="https://www.last.fm/music/<%= encodeURIComponent(artist.name) %>/<%= encodeURIComponent(album.name) %>"
+            target="_blank">
+            <%= album.name %>
+          </a>
+        </strong>
+        <% if (album.image && album.image[2] && album.image[2]['#text']) { %>
+          <br>
+          <img src="<%= album.image[2]['#text'] %>" alt="Album Art" width="100">
+          <% } %>
+
+            <!-- Comments section for this album -->
+            <h4>Comments:</h4>
+            <ul>
+              <% albumComments.forEach(comment=> {
+                if (comment.album.toLowerCase() === album.name.toLowerCase()) { %>
+                <li>
+                  <%= comment.comment %>
+                    <% if (comment.rating) { %>
+                      - <strong>
+                        <%= '★' .repeat(comment.rating) + '☆' .repeat(5 - comment.rating) %>
+                      </strong>
+                      <% } %>
+                        <br>
+                        <small>(<%= comment.submittedAt.toDateString() %>)</small>
+                </li>
+
+                <% } }) %>
+            </ul>
+
+            <!-- Form to submit comment -->
+            <form action="/album-comment" method="post">
+              <input type="hidden" name="artist" value="<%= artist.name %>">
+              <input type="hidden" name="album" value="<%= album.name %>">
+              <label for="comment">Leave a comment:</label><br>
+              <textarea name="comment" rows="2" cols="40" required></textarea><br>
+              <label for="rating">Rating (1-5):</label>
+              <select name="rating" required>
+                <option value="">-- Select --</option>
+                <option value="1">★☆☆☆☆</option>
+                <option value="2">★★☆☆☆</option>
+                <option value="3">★★★☆☆</option>
+                <option value="4">★★★★☆</option>
+                <option value="5">★★★★★</option>
+              </select>
+
+              <button type="submit">Submit</button>
+            </form>
+            <hr>
+      </li>
+      <% }) %>
+  </ul>
+
+  <h2>Top Tracks</h2>
+  <ol>
+    <% topTracks.forEach(track=> { %>
+      <li>
+        <a href="https://www.last.fm/music/<%= encodeURIComponent(artist.name) %>/_/<%= encodeURIComponent(track.name) %>"
+          target="_blank">
+          <%= track.name %>
+        </a>
+      </li>
+      <% }) %>
+  </ol>
+
+  <h2>Fan Stories about <%= artist.name %>
+  </h2>
+  <% if (fanStories.length===0) { %>
+    <p>No stories yet. Be the first to <a href="/submit-story">share one</a>!</p>
+    <% } else { %>
+      <% fanStories.forEach(story=> { %>
+        <div class="story-card">
+          <p>
+            <%= story.story %>
+          </p>
+          <small>Submitted on <%= story.submittedAt.toDateString() %></small>
+        </div>
+        <% }) %>
+          <% } %>
+
+            <a href="/">← Back</a>
+</body>
+
+</html>

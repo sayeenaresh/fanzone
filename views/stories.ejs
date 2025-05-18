@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Fan Stories</title>
+</head>
+<body>
+  <h1>All Fan Stories</h1>
+
+  <form action="/stories" method="get">
+    <label for="artist">Filter by artist:</label>
+    <input type="text" name="artist" placeholder="e.g. Harry Styles" value="<%= artistFilter %>">
+    <button type="submit">Search</button>
+    <% if (artistFilter) { %>
+      <a href="/stories">(Clear filter)</a>
+    <% } %>
+  </form>
+
+  <hr>
+
+  <% if (stories.length === 0) { %>
+    <p>No stories found<% if (artistFilter) { %> for "<%= artistFilter %>"<% } %>.</p>
+  <% } else { %>
+    <% stories.forEach(story => { %>
+      <div class="story-card">
+        <h3><%= story.artist %></h3>
+        <p><%= story.story %></p>
+        <small><%= story.submittedAt.toDateString() %></small>
+      </div>
+      <hr>
+    <% }) %>
+  <% } %>
+
+  <a href="/">← Back to Home</a>
+</body>
+</html>
