@@ -13,9 +13,11 @@
     <%= artist.name %>
   </h1>
 
-  <p>
-    <%= artist.bio.summary %>
-  </p>
+<p>
+  <%= artist.bio.summary.replace(/<a[^>]*>(.*?)<\/a>/g, '').replace(/<[^>]*>/g, '') %>
+  <a href="https://www.last.fm/music/<%= encodeURIComponent(artist.name) %>" target="_blank">Read more here</a>
+</p>
+
 
   <h2>Top Albums</h2>
   <ul>
